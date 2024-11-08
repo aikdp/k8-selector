@@ -1,0 +1,35 @@
+#AFFINITY: pod should go where previous pod is there (pod2 should go where pod1 runs)
+# Affinity
+# Tells the scheduler to schedule a new pod on the same node as other pods that have matching labels. Affinity can improve application performance by placing pods that need to communicate frequently closer together.
+# Anti-affinity
+# Prevents the scheduler from scheduling a new pod on the same node as other pods that have matching labels. Anti-affinity can help avoid a single point of failure by distributing pods across multiple nodes. This is useful for high-availability applications, like distributed database
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+spec:
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:  #this means if labels not matches, pod will go random nodes
+      - weight: 1
+        preference:   #not giving matching labels(we laebled hardware=gpu)
+          matchExpressions:
+          - key: another-node-label-key
+            operator: In
+            values:
+            - another-node-label-value
+  containers:
+  - name: nginx
+    image: nginx:stable-perl
+  tolerations:  #here toleartion given
+  - key: "hardware"
+    operator: "Equal"
+    value: "gpu"
+    effect: "NoSchedule"
+
+
+#kubectl apply -f 04-node-affinity-prfrd.yaml
+# Kubectl get pods -o wide
+# Ans: Running (preferredDuring—will schedule pod to any node, if labels not matches also)
+# key value not given, pod running.

@@ -1,0 +1,26 @@
+#POD must go to tainted node: added selector
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  labels:
+    env: test
+spec:
+  containers:
+  - name: nginx
+    image: nginx: stable-perl
+  # nodeSelector:
+  #   disktype: ssd
+  nodeSelector:
+    hardware: gpu
+  tolerations:
+  - key: "hardware"
+    operator: "Equal"
+    value: "gpu"
+    effect: "NoSchedule"
+
+
+#Check the pods, running in tainted or not
+#Kubectl apply -f 03-node-selector-taint.yaml
+#ANs: pod must go tainted node

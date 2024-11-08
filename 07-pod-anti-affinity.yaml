@@ -1,0 +1,54 @@
+apiVersion: v1  
+kind: Pod   
+metadata:     
+  name: pod-1
+  labels:
+    purpose: affinity
+spec:       
+  containers:
+  - name: nginx
+    image: nginx:stable-perl   
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-2
+spec:
+  affinity:
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+          - key: purpose
+            operator: In
+            values:
+            - affinity
+        topologyKey: topology.kubernetes.io/zone
+  containers:
+  - name: nginx
+    image: nginx:stable-perl
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-3
+spec:
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+            - key: purpose
+              operator: In
+              values:
+              - affinity
+          topologyKey: topology.kubernetes.io/zone
+  containers:
+  - name: nginx
+    image: nginx:stable-perl
+
+#Pod anti- affinity means, if it ,matches the labels pod 3 will runs where pod1 and pod2 not running.
+#kubectl apply -f 07-pod-anti-affinity.yaml
+#ANs: Pod1 and pod2 running in the same node. but pod 3 will are another node

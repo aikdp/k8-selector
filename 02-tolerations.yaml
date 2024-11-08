@@ -1,0 +1,18 @@
+#Check the pod with Tainted node with conditions TOLEARTION
+apiVersion: v1  
+kind: Pod   
+metadata:     
+  name: nginx 
+spec:       
+  containers:
+  - name: nginx
+    image: nginx:stable-perl
+
+  tolerations:
+  - key: "hardware"
+    operator: "Equal"
+    value: "gpu"
+    effect: "NoSchedule"
+
+#But toleration does gaurantee that it might go to taineted or not.
+#kubectl apply -f 02-tolerations.yaml

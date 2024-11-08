@@ -1,0 +1,18 @@
+#Check the pod with Tainted node 
+apiVersion: v1  
+kind: Pod   
+metadata:     
+  name: nginx 
+spec:       
+  containers:
+  - name: nginx
+    image: nginx:stable-perl    
+
+#Git push-->Git PULl
+#kubectl apply -f 01-taint.yaml
+#kubectl get pods -o wide
+
+
+#You can describ ethe tainted node, will see that Tainted
+# kubectl describe node <node-ip> -- bash
+
